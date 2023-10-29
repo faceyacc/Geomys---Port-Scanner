@@ -62,5 +62,15 @@ func ICMPScan(host string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// return *p
+}
+
+func WideScan(hostname string) ([]Scan, []Scan) {
+	var resultTCP []Scan
+	var resultUDP []Scan
+
+	for i := 1024; i < 49152; i++ {
+		resultTCP = append(resultTCP, ScanPort("tcp", hostname, i))
+		resultUDP = append(resultUDP, ScanPort("udp", hostname, i))
+	}
+	return resultTCP, resultUDP
 }
