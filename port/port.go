@@ -1,9 +1,13 @@
 package port
 
 import (
+	"fmt"
 	"net"
+	"os"
 	"strconv"
 	"time"
+
+	"github.com/tatsushid/go-fastping"
 )
 
 type Scan struct {
@@ -38,4 +42,25 @@ func InitalScan(hostname string) ([]Scan, []Scan) {
 	}
 
 	return resultTCP, resultUDP
+}
+
+func ICMPScan(host string) {
+	p := fastping.NewPinger()
+	ra, err := net.ResolveIPAddr("ip4:icmp", host)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	p.AddIPAddr(ra)
+	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
+		fmt.Printf("IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+	}
+	p.OnIdle = func() {
+		fmt.Println("finish")
+	}
+	err = p.Run()
+	if err != nil {
+		fmt.Println(err)
+	}
+	// return *p
 }

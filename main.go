@@ -9,9 +9,10 @@ import (
 func main() {
 
 	fmt.Println("geomys - port scanner")
-	scanTCP, scanUDP := port.InitalScan("localhost")
-
-	fmt.Println(scanTCP)
-	fmt.Println(scanUDP)
+	port.ICMPScan("localhost")
+	// fmt.Println(test)
+	// scanTCP, scanUDP := port.InitalScan("localhost")
+	// fmt.Println(scanTCP)
+	// fmt.Println(scanUDP)
 
 }
