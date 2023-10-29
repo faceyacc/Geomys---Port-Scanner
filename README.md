@@ -1,2 +1,2 @@
-# Geomys---Port-Scanner
+# Geomys - Port-Scanner
 Port scanner made in Go
