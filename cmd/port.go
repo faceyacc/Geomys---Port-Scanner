@@ -34,48 +34,44 @@ func ScanPort(protocol, hostname string, port int) Scan {
 	return scan
 }
 
-func InitalScan(hostname string) ([]Scan, []Scan) {
-
+func InitalScan(hostname string) (int, int) {
 	var resultTCP []Scan
 	var resultUDP []Scan
 
 	for i := 0; i < 1024; i++ {
-		resultTCP = append(resultTCP, ScanPort("tcp", hostname, i))
-		resultUDP = append(resultUDP, ScanPort("udp", hostname, i))
+		tcp := ScanPort("tcp", hostname, i)
+		udp := ScanPort("udp", hostname, i)
+
+		if tcp.State == "Open" {
+			resultTCP = append(resultTCP, tcp)
+		}
+
+		if udp.State == "Open" {
+			resultUDP = append(resultUDP, udp)
+
+		}
 	}
 
-	return resultTCP, resultUDP
+	return len(resultTCP), len(resultUDP)
 }
 
-func ICMPScan(hostname string) {
-	p := fastping.NewPinger()
-	ra, err := net.ResolveIPAddr("ip4:icmp", hostname)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	p.AddIPAddr(ra)
-	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
-		fmt.Printf("IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
-	}
-	// p.OnIdle = func() {
-	// 	fmt.Println(".....")
-	// }
-	err = p.Run()
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func WideScan(hostname string) ([]Scan, []Scan) {
+func WideScan(hostname string) (int, int) {
 	var resultTCP []Scan
 	var resultUDP []Scan
 
 	for i := 1024; i < 49152; i++ {
-		resultTCP = append(resultTCP, ScanPort("tcp", hostname, i))
-		resultUDP = append(resultUDP, ScanPort("udp", hostname, i))
+		tcp := ScanPort("tcp", hostname, i)
+		udp := ScanPort("udp", hostname, i)
+
+		if tcp.State == "Open" {
+			resultTCP = append(resultTCP, tcp)
+		}
+
+		if udp.State == "Open" {
+			resultUDP = append(resultUDP, udp)
+		}
 	}
-	return resultTCP, resultUDP
+	return len(resultTCP), len(resultUDP)
 }
 
 func NMAPScan(hostname, port string) {
@@ -113,4 +109,24 @@ func NMAPScan(hostname, port string) {
 	}
 
 	fmt.Printf("Scan completed: %d hosts up scanned in %.2f seconds\n", len(result.Hosts), result.Stats.Finished.Elapsed)
+}
+
+func ICMPScan(hostname string) {
+	p := fastping.NewPinger()
+	ra, err := net.ResolveIPAddr("ip4:icmp", hostname)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	p.AddIPAddr(ra)
+	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
+		fmt.Printf("IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
+	}
+	// p.OnIdle = func() {
+	// 	fmt.Println(".....")
+	// }
+	err = p.Run()
+	if err != nil {
+		fmt.Println(err)
+	}
 }
