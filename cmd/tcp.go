@@ -11,7 +11,7 @@ import (
 var tcpCmd = &cobra.Command{
 	Use:   "tcp",
 	Short: "Returns a opened ports on tcp",
-	Long:  `Get the a list of exposed ports on TCP. This command takes two arguments: hostname(s) and port(s). It returns if the port(s) are open or closed`,
+	Long:  `Get a list of exposed ports on TCP. This command takes two arguments: hostname(s) and port(s). It returns if the port(s) are open or closed`,
 	Args:  cobra.MatchAll(),
 	Run: func(cmd *cobra.Command, args []string) {
 		hostnames := args[0] // TODO: hostnames should take all args except for the last arg.

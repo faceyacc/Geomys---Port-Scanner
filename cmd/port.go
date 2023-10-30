@@ -58,9 +58,9 @@ func ICMPScan(hostname string) {
 	p.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
 		fmt.Printf("IP Addr: %s receive, RTT: %v\n", addr.String(), rtt)
 	}
-	p.OnIdle = func() {
-		fmt.Println("finish")
-	}
+	// p.OnIdle = func() {
+	// 	fmt.Println(".....")
+	// }
 	err = p.Run()
 	if err != nil {
 		fmt.Println(err)
