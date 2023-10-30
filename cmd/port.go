@@ -1,12 +1,15 @@
-package port
+package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/Ullaakut/nmap/v3"
 	"github.com/tatsushid/go-fastping"
 )
 
@@ -44,9 +47,9 @@ func InitalScan(hostname string) ([]Scan, []Scan) {
 	return resultTCP, resultUDP
 }
 
-func ICMPScan(host string) {
+func ICMPScan(hostname string) {
 	p := fastping.NewPinger()
-	ra, err := net.ResolveIPAddr("ip4:icmp", host)
+	ra, err := net.ResolveIPAddr("ip4:icmp", hostname)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -73,4 +76,41 @@ func WideScan(hostname string) ([]Scan, []Scan) {
 		resultUDP = append(resultUDP, ScanPort("udp", hostname, i))
 	}
 	return resultTCP, resultUDP
+}
+
+func NMAPScan(hostname, port string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	scanner, err := nmap.NewScanner(
+		ctx,
+		nmap.WithTargets(hostname),
+		nmap.WithPorts(port),
+	)
+	if err != nil {
+		log.Fatalf("unable to create nmap scanner: %v", err)
+	}
+
+	result, warnings, err := scanner.Run()
+	if len(*warnings) > 0 {
+		log.Printf("run finished with warnings: %s\n", warnings)
+	}
+	if err != nil {
+		log.Fatalf("unable to run nmap scan: %v", err)
+	}
+
+	// Use the results to print an example output
+	for _, host := range result.Hosts {
+		if len(host.Ports) == 0 || len(host.Addresses) == 0 {
+			continue
+		}
+
+		fmt.Printf("Host %q:\n", host.Addresses[0])
+
+		for _, port := range host.Ports {
+			fmt.Printf("\tPort %d/%s %s %s\n", port.ID, port.Protocol, port.State, port.Service.Name)
+		}
+	}
+
+	fmt.Printf("Scan completed: %d hosts up scanned in %.2f seconds\n", len(result.Hosts), result.Stats.Finished.Elapsed)
 }
