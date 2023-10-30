@@ -5,10 +5,12 @@
 > Geomys is a ultra-lightweight port scanner written Go. Use it to quickly see what tcp and udp ports are exposed, and ICMP ping to test connection and speed to a given host.
 
 ## Usage
-- [x] Implement short scan
-- [x] Implement wide scan 
-- [ ] Use nmap to can for open port on tcp 
-- [ ] Make application avaible via CLI
+- [x] Implement short scan (ports 0 - 1024)
+- [x] Implement wide scan (ports 1024 - 49152)
+- [x] Use nmap to can for open port on tcp 
+- [x] Make application avaible via CLI
+- [ ] Implement autocompletion for CLI
+- [ ] Implement seperate UDP scan funciton
 ## Demo
 
 Coming Soon 👀
