@@ -10,7 +10,7 @@
 - [x] Use nmap to can for open port on tcp 
 - [x] Make application avaible via CLI
 - [ ] Implement auto-completion for CLI
-- [ ] Implement seperate UDP scan funciton
+- [x] Implement seperate UDP scan funciton
 ## Demo
 
 Coming Soon 👀
