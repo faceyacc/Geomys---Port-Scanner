@@ -12,7 +12,7 @@ import (
 // pingCmd represents the ping command
 var pingCmd = &cobra.Command{
 	Use:   "ping",
-	Short: "Pings a given host",
+	Short: "Pings a given host.",
 	Long: `Test the reachability of a network sending ICMP request. 
 		  This command takes one argument: hostname. It returns if the host is reachable or not, and the Round Trip Time to reach 
 		  a given host.`,
